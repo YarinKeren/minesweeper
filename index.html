@@ -8,8 +8,21 @@
   </head>
   <body onload="onInit()">
     <table class="board-container">
+      <div class="game-header">
+        <span class="bombs-left">bombs</span>
+        <span class="game-state" onclick="restartGame()">😊</span>
+        <span class="timer">000</span>
+      </div>
+      <div class="game-levels">
+        <button onclick="onInit(4, 2)">Beginner</button>
+        <button onclick="onInit(8, 14)">Intermediate</button>
+        <button onclick="onInit(12, 32)">Expert</button>
+      </div>
+      <div class="lives"></div>
+      <div class="hints"></div>
       <tbody class="board"></tbody>
     </table>
+
     <footer>© Yarin Keren</footer>
     <script src="js/utils.js"></script>
     <script src="js/app.js"></script>
