@@ -123,6 +123,7 @@ table {
   background-color: rgb(178, 231, 248);
   transition: 0.2s ease-in-out;
   border-radius: 2px;
+  height: 3em;
 }
 
 .lives {
