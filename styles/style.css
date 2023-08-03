@@ -2,64 +2,79 @@
   font-family: MineSweeper;
   src: url(mine-sweeper.ttf);
 }
-
-:root {
-  --pop-background: orange;
-  --selected-gradient-top: black;
-  --selected-gradient-bottom: orange;
-  --booked-gradient-top: black;
-  --booked-gradient-bottom: red;
-  --bookedHover-gradient-top: black;
-  --bookedHover-gradient-bottom: black;
+@font-face {
+  font-family: LedTimer;
+  src: url(ledtimer.ttf);
 }
 
-body {
-  min-height: calc(100vh - table);
+* {
+  box-sizing: border-box;
+}
+
+:root {
+  --cell-size: 26px;
+  --timer-width: 104px;
+}
+
+.game-container {
+  width: auto;
+  max-width: 50vw;
+  height: auto;
   display: flex;
+  background: linear-gradient(to right, #ffffff 0%, #7bb0b1 0%, #c251c2 100%);
   flex-direction: column;
-  /* align-items: center; */
+  margin: auto;
+  margin-top: 5vh;
+  border-radius: 10px;
+  border: 1px solid gray;
+  overflow-y: auto;
+  box-shadow: 5px 5px 16px 2px #bbbbbb;
+  padding-bottom: 10px;
+  margin-bottom: 30px;
+  position: relative;
+}
+
+.game-container-dark-mode {
+  width: auto;
+  max-width: 50vw;
+  height: auto;
+  display: flex;
+  background: linear-gradient(to right, #000000 0%, #073e3f 0%, #441044 100%);
+  flex-direction: column;
+  margin: auto;
+  margin-top: 5vh;
+  border-radius: 10px;
+  border: 1px solid gray;
+  overflow-y: auto;
+  box-shadow: 5px 5px 16px 2px #bbbbbb;
+  padding-bottom: 10px;
+  margin-bottom: 30px;
+  position: relative;
+  color: lightskyblue !important;
 }
 
 table {
-  /* border-collapse: separate; */
   border-spacing: 0px;
-  /* border: 1px solid black; */
-  /* width: 50%; */
-  /* display: flex; */
-  /* flex-direction: column; */
-  /* align-items: center; */
-  /* justify-content: center; */
-}
-
-td {
-  /* border: 0.5px solid black; */
-  /* width: 50px;
-  height: 50px; */
-  /* box-shadow: 1px 1px 2px 0px #000000; */
 }
 
 .cell {
-  width: 14px;
-  height: 14px;
-  /* background-color: #c6c6c6; */
+  width: var(--cell-size);
+  height: var(--cell-size);
   text-align: center;
-  font-size: 10px;
+  font-size: 14px;
   font-family: MineSweeper;
   background-image: url("../img/tile.png");
   background-repeat: no-repeat;
-  /* border: 1px solid gray; */
+  background-size: cover;
 }
 
 .clicked {
-  /* background-color: #c6c6c6; */
-  /* background-image: none;
-   */
   background-color: #c6c6c6;
   background-image: none;
 }
 
 .board-container {
-  margin: auto;
+  margin: 0 auto 0 auto;
 }
 
 .mine {
@@ -74,30 +89,18 @@ td {
   visibility: hidden;
 }
 
-footer {
-  /* position: relative; */
-  text-align: center;
-  width: 31vw;
-  bottom: 0px;
-  background-color: black;
-  color: white;
-  margin: auto;
-  margin-top: 10px;
-}
-
 .game-header {
-  /* display: flex; */
+  display: flex;
   justify-content: space-around;
-  font-size: 0.7em;
-  font-family: MineSweeper;
-  margin-bottom: 10px;
-  margin: auto;
+  font-size: 2em;
+  /* margin-bottom: 10px; */
+  margin: 0 auto 7px auto;
 }
 
 .game-state {
-  padding-right: 10px;
-  padding-left: 5px;
-  font-size: 20px;
+  font-size: 1.5em;
+  padding-inline-start: 10px;
+  padding-inline-end: 10px;
 }
 
 .game-state:hover {
@@ -109,27 +112,205 @@ footer {
 }
 
 .game-levels {
-  margin: auto;
+  margin: 0 auto 7px auto;
 }
 
 .game-levels button {
   text-align: center;
-  font-size: 0.3em;
-  border-radius: none;
-  border: 1px solid black;
-  background-color: #c6c6c6;
+  font-family: MineSweeper;
+  /* display: block; */
+  font-size: 0.5em;
+  background-color: rgb(178, 231, 248);
+  transition: 0.2s ease-in-out;
+  border-radius: 2px;
 }
 
 .lives {
-  margin: auto;
-  margin-top: 5px;
+  margin: 0 auto 7px auto;
+  font-size: 2em;
 }
 
 .hints {
-  margin-bottom: 10px;
-  margin: auto;
+  font-size: 2em;
+  /* margin-bottom: 10px; */
+  margin: 0 auto 7px auto;
+  display: block;
 }
 
 .highlight-hint {
   background-color: yellow;
 }
+
+.timer,
+.bombs-left {
+  font-family: LedTimer;
+  font-size: 2em;
+}
+
+.timer {
+  padding-left: 10px;
+}
+.bombs-left {
+  min-width: calc(var(--timer-width));
+  text-align: center;
+}
+.highscore {
+  /* padding-top: 5px; */
+  font-family: MineSweeper;
+  font-size: 1em;
+  margin: 0 auto 7px auto;
+  /* margin-bottom: 0px; */
+}
+
+.safe-click button {
+  margin: 0 auto 7px auto;
+  margin: auto;
+  font-family: MineSweeper;
+  display: block;
+  font-size: 1em;
+  background-color: rgb(178, 231, 248);
+  transition: 0.2s ease-in-out;
+  border-radius: 2px;
+}
+
+.exterminator {
+  font-family: MineSweeper;
+  display: block;
+  text-align: center;
+  padding: 0px;
+  font-size: 1.5em;
+  background-color: rgb(53, 183, 41);
+  border-radius: 4px;
+  transition: 0.2s ease-in-out;
+}
+
+.mega-hint {
+  margin: 7px auto 7px auto;
+  font-family: MineSweeper;
+  display: block;
+  font-size: 1em;
+  background-color: rgb(185, 0, 0);
+  transition: 0.2s ease-in-out;
+  border-radius: 2px;
+}
+
+footer {
+  position: fixed;
+  bottom: 0px;
+  left: 50%; /* Center the footer horizontally */
+  transform: translateX(-50%); /* Center the footer horizontally */
+  width: 50vw;
+  border-radius: 5px;
+  background-color: black;
+  color: white;
+  font-family: MineSweeper;
+  font-size: 1em;
+  text-align: center;
+}
+
+.build-mode button {
+  font-family: MineSweeper;
+  display: block;
+  text-align: center;
+  padding: 0px;
+  font-size: 1.5em;
+  background-color: rgb(255, 160, 17);
+  border-radius: 4px;
+  transition: 0.2s ease-in-out;
+}
+
+.build-mode button:hover,
+.exterminator:hover {
+  cursor: pointer;
+  background-color: whitesmoke;
+}
+
+.active {
+  cursor: cell;
+}
+
+.undo {
+  margin: 10px auto auto auto;
+  font-family: MineSweeper;
+  display: block;
+  font-size: 1em;
+  background-color: rgb(185, 0, 0);
+  border-radius: 2px;
+  transition: 0.2s ease-in-out;
+}
+
+.undo:hover,
+.safe-click button:hover,
+.game-levels button:hover,
+.mega-hint:hover {
+  color: whitesmoke;
+}
+
+.modes-container {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+}
+
+/* ///////////////////////// */
+/*//////// DARK MODE ///////*/
+/* //////////////////////// */
+.toggle {
+  --size: 1.225rem;
+  --width: calc(1.225rem * 2);
+  display: inline-grid;
+  align-items: center;
+  width: var(--width);
+  height: var(--size);
+  cursor: pointer;
+  /* position: absolute; */
+  top: 10px;
+  right: 10px;
+}
+
+.toggle::before {
+  content: "🌞🌙";
+  font-size: 0.89rem;
+  grid-area: 1 / -1;
+  padding: 1px;
+  width: var(--width);
+  height: var(--size);
+  transition: all 250ms ease;
+  border-radius: var(--width);
+  background-color: #000;
+}
+
+.toggle:hover::before {
+  box-shadow: 0 0 0 2px #aef;
+}
+
+.toggle::after {
+  content: "";
+  grid-area: 1 / -1;
+  width: calc(var(--size) * 0.9);
+  height: calc(var(--size) * 0.9);
+  transform: translateX(10%);
+  transform-origin: center center;
+  transition: all 250ms ease;
+  border-radius: 100%;
+  background: #fff;
+}
+
+.toggle:checked::before {
+  background-color: #2be;
+}
+
+.toggle:checked::after {
+  transform: translateX(calc(var(--width) - var(--size) * 0.9));
+}
+
+.toggle:disabled {
+  pointer-events: none;
+  filter: grayscale(1);
+}
+
+.toggle:disabled::before {
+  background: #2be;
+}
+
+/* /////////////////////// */
