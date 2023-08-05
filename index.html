@@ -9,12 +9,27 @@
   <body onload="onInit()">
     <div class="game game-container">
       <div class="modes-container">
-        <div class="build-mode">
-          <button onclick="onBuildMode(this)">🛠</button>
+        <div class="tooltip">
+          <span class="tooltip-text">Build Mode</span>
+          <div class="build-mode">
+            <button onclick="onBuildMode(this)">🛠</button>
+          </div>
         </div>
-        <button class="exterminator" onclick="onHandleExterminator(this)">
-          &#129519;
-        </button>
+        <div class="tooltip">
+          <span class="tooltip-text">Exterminator</span>
+          <button class="exterminator" onclick="onHandleExterminator(this)">
+            &#129519;
+          </button>
+        </div>
+        <div class="tooltip">
+          <div class="tooltip-text">Safe Click</div>
+          <div class="safe-click">
+            <button onclick="onSafeClick()">
+              <span style="display: block">3</span>
+              &#10004;&#65039;
+            </button>
+          </div>
+        </div>
         <button class="mega-hint" onclick="onMegaHint(this)">Mega Hint</button>
         <input type="checkbox" class="toggle" onchange="toggleDarkMode(this)" />
       </div>
@@ -24,16 +39,14 @@
           <span class="game-state" onclick="onRestart()">😊</span>
           <span class="timer">000</span>
         </div>
+        <div class="highscore">Highscore: <span></span></div>
         <div class="game-levels">
           <button onclick="onInit(4, 2)">Beginner</button>
           <button onclick="onInit(8, 14)">Intermediate</button>
           <button onclick="onInit(12, 32)">Expert</button>
         </div>
-        <div class="highscore">Highscore: <span></span></div>
         <div class="lives"></div>
-        <div class="safe-click">
-          <button onclick="onSafeClick()">Safe Clicks: <span>3</span></button>
-        </div>
+
         <div class="hints"></div>
         <tbody class="board"></tbody>
       </table>

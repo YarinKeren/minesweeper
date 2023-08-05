@@ -75,6 +75,7 @@ table {
 
 .board-container {
   margin: 0 auto 0 auto;
+  box-shadow: 3px 3px 3px 1px rgba(0, 0, 0, 0.1);
 }
 
 .mine {
@@ -164,14 +165,16 @@ table {
 }
 
 .safe-click button {
-  margin: 0 auto 7px auto;
   margin: auto;
   font-family: MineSweeper;
   display: block;
-  font-size: 1em;
+  font-size: 0.71em;
   background-color: rgb(178, 231, 248);
   transition: 0.2s ease-in-out;
-  border-radius: 2px;
+  text-align: center;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-radius: 4px;
 }
 
 .exterminator {
@@ -221,7 +224,8 @@ footer {
 }
 
 .build-mode button:hover,
-.exterminator:hover {
+.exterminator:hover,
+.safe-click button:hover {
   cursor: pointer;
   background-color: whitesmoke;
 }
@@ -241,7 +245,6 @@ footer {
 }
 
 .undo:hover,
-.safe-click button:hover,
 .game-levels button:hover,
 .mega-hint:hover {
   color: whitesmoke;
@@ -315,3 +318,36 @@ footer {
 }
 
 /* /////////////////////// */
+
+.tooltip {
+  position: relative;
+  display: flex;
+  place-content: center;
+  display: inline;
+}
+
+/* styling of the tooltip display */
+.tooltip .tooltip-text {
+  visibility: hidden;
+  font-family: MineSweeper;
+  font-size: 8px;
+  width: 120px;
+  color: black;
+  text-align: center;
+  border-radius: 2px;
+  padding: 5px 0;
+  position: absolute;
+  z-index: 1;
+  border: 1px solid black;
+  top: 20%;
+  left: 90px;
+  margin-left: -60px;
+  background-color: rgb(178, 231, 248);
+  opacity: 0;
+  transition: opacity 1s;
+}
+
+.tooltip:hover .tooltip-text {
+  visibility: visible;
+  opacity: 1;
+}

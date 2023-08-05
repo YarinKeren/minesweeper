@@ -119,18 +119,14 @@ function buildBoard() {
 
 // Rendering the lives left
 function renderLives() {
-  let livesSTR = "";
-  for (let i = 0; i < gGame.lives; i++) {
-    livesSTR += "💖";
-  }
-  document.querySelector(".lives").innerText = livesSTR;
+  document.querySelector(".lives").innerText = "💖".repeat(gGame.lives);
 }
 
 // Rendering the hints left
 function renderHints() {
   let hintsSTR = "";
   for (let i = 0; i < gGame.hints; i++) {
-    hintsSTR += `<span onclick="onGetHint(this)">💡</span>`;
+    hintsSTR += `<span onclick="onGetHint(this)" title="Hint">💡</span>`;
   }
   document.querySelector(".hints").innerHTML = hintsSTR;
 }
@@ -201,16 +197,18 @@ function handleNumColors(num) {
 }
 
 // Handles rendering the board
-function renderBoard(board) {
+function renderBoard(board, saveToUndo = true) {
   var strHTML = "";
   let cellContent = "";
   let numColor = "";
   let isClicked = "";
 
   // Creating a deep copy of the board
-  const boardCopy = JSON.parse(JSON.stringify(board));
-  prevBoards.push(boardCopy);
-
+  // Doesn't save a copy when unnecessary
+  if (saveToUndo) {
+    const boardCopy = JSON.parse(JSON.stringify(board));
+    prevBoards.push(boardCopy);
+  }
   // Rendering lives/hints
   renderLives();
   renderHints();
@@ -267,21 +265,36 @@ function handleLost(board) {
 
 // Checks for win
 function checkGameOver() {
-  if (
-    gGame.markedCount === gLevel.MINES &&
-    gGame.shownCount === gLevel.SIZE * gLevel.SIZE - gLevel.MINES
-  ) {
-    if (gLevel.MINES === 2)
-      localStorage.setItem("beginnerBest", gTimer.seconds);
-    else if (gLevel.MINES === 14)
-      localStorage.setItem("intermediateBest", gTimer.seconds);
-    else localStorage.setItem("expertBest", gTimer.seconds);
-
-    clearInterval(gTimer.timerInterval);
-    document.querySelector(".game-state").innerText = "😎";
-    return true;
+  for (var i = 0; i < gBoard.length; i++) {
+    for (var j = 0; j < gBoard[0].length; j++) {
+      const cell = gBoard[i][j];
+      if (cell.isMine && cell.isShown) continue;
+      if (cell.isMine && cell.isMarked) continue;
+      if (!cell.isMine && cell.isShown) continue;
+      return false;
+    }
   }
-  return false;
+
+  handleScoreBoard();
+  clearInterval(gTimer.timerInterval);
+  document.querySelector(".game-state").innerText = "😎";
+  return true;
+}
+
+// Handles the scoreboard
+function handleScoreBoard() {
+  const beg = parseInt(localStorage.getItem("beginnerBest"));
+  const int = parseInt(localStorage.getItem("intermediateBest"));
+  const exp = parseInt(localStorage.getItem("expertBest"));
+
+  if (gLevel.MINES === 2 && gTimer.seconds < beg)
+    localStorage.setItem("beginnerBest", gTimer.seconds);
+  else if (gLevel.MINES === 14 && gTimer.seconds < int)
+    localStorage.setItem("intermediateBest", gTimer.seconds);
+  else if (gTimer.seconds < exp)
+    localStorage.setItem("expertBest", gTimer.seconds);
+
+  getHighscore();
 }
 
 // Handling marking a cell (flag)
@@ -345,6 +358,9 @@ function hideMines(board) {
 
 // Handle Mega Hint logic
 function handleMegaHint(i, j) {
+  const cell = document.querySelector(`[data-i="${i}"][data-j="${j}"]`);
+  cell.style.backgroundColor = "rgb(185, 0, 0)";
+  cell.style.backgroundImage = "none";
   //Handle Mega Hint
   if (gGame.isMegaHint && gGame.megaHintClicks === 2) {
     gGame.megaHintCoords.firstClick.i = i;
@@ -365,7 +381,7 @@ function handleMegaHint(i, j) {
       gGame.megaHintCoords.secondClick.i,
       gGame.megaHintCoords.secondClick.j
     );
-    renderBoard(gBoard);
+    renderBoard(gBoard, false);
     setTimeout(() => {
       unHighlightArea(
         gBoard,
@@ -469,8 +485,7 @@ function onCellClicked(i, j) {
   if (cell.isMine && cell.isShown) return;
   if (cell.isMarked) return;
 
-  // Hande hitting a mine
-  console.log("hit");
+  // Handle hitting a mine
   if (cell.isMine) handleMineHit(cell);
 
   // Handle showing cells around
@@ -622,7 +637,11 @@ function undoBoard() {
 
   // Update current features state
   gGame.lives = gGame.prevLives;
-  if (gLevel.SIZE === 4 && gGame.lives > 2) gGame.lives = 2;
+  document.querySelector(".bombs-left").innerText = ++gGame.minesLeft;
+  if (gLevel.SIZE === 4 && gGame.lives >= 2) {
+    gGame.lives = 2;
+    document.querySelector(".bombs-left").innerText = 2;
+  }
   gGame.hints = gGame.prevHints;
 
   const previousBoard = prevBoards.pop();
@@ -631,6 +650,7 @@ function undoBoard() {
   updatePrevState(previousBoard);
 
   renderBoard(previousBoard);
+  prevBoards.pop();
 }
 
 // Toggle game lost (for undoBoard func)
@@ -646,8 +666,10 @@ function toggleGameLost() {
 function updatePrevState(prevBoard) {
   for (let i = 0; i < gLevel.SIZE; i++) {
     for (let j = 0; j < gLevel.SIZE; j++) {
-      gBoard[i][j].isShown = prevBoard[i][j].isShown;
-      gBoard[i][j].isMarked = prevBoard[i][j].isMarked;
+      if (gBoard[i][j]) {
+        gBoard[i][j].isShown = prevBoard[i][j].isShown;
+        gBoard[i][j].isMarked = prevBoard[i][j].isMarked;
+      }
     }
   }
 }
